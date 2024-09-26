@@ -35,11 +35,18 @@ const products = [
 }
 ];
 
+// Step 3: First Create a Variable at the top
+let productsHTML = '';
+
 // Step 2: Generate the HTML
 // Use the data to generate the HTML
 // Loop throw the Array of products
 products.forEach((product) => {
-    const html = `
+    // Step 3: Second save the HTML into the variable productsHTML
+    // productsHTML += means productsHTML = productsHTML + 
+    // productsHTML += it's an Accumulator Pattern
+    // Pour les arrondis uitliser la methode toFixed()
+    productsHTML += `
         <div class="product-container">
           <div class="product-image-container">
             <img class="product-image"
@@ -59,7 +66,7 @@ products.forEach((product) => {
           </div>
 
           <div class="product-price">
-            $${product.priceCents / 100}
+            $${(product.priceCents / 100).toFixed(2)}
           </div>
 
           <div class="product-quantity-container">
@@ -89,5 +96,15 @@ products.forEach((product) => {
           </button>
         </div>
     `;
-    console.log(html);
 })
+
+// Step 3: Combine this HTML together into
+// one string and put it on the web page
+console.log(productsHTML);
+
+// Step 4: Take the HTML 
+// And put it on the web page (using the DOM)
+// Use the DOM:
+// '.' means look and take the element with the class of js-products-grid
+// '.innerHTML means change the HTML inside the element
+document.querySelector('.js-products-grid').innerHTML = productsHTML;
