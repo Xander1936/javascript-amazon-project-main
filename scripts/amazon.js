@@ -5,7 +5,7 @@
 
 // Step 1: Save the data
 // This is called a data structure.
-const products = [
+/* const products = [
 {
     image: "images/products/athletic-cotton-socks-6-pairs.jpg",
     name: "Black and Gray Athletic Cotton Socks - 6 Pairs",
@@ -32,9 +32,17 @@ const products = [
         count: 56
     },
     priceCents: 799
-}
-];
-
+},
+{
+    image: 'images/products/black-2-slot-toaster.jpg',
+    name: '2 Slot Toaster - Black',
+    rating: {
+        stars: 5,
+        count: 2197
+    },
+    priceCents: 1899
+},
+]; */
 // Step 3: First Create a Variable at the top
 let productsHTML = '';
 
@@ -46,6 +54,7 @@ products.forEach((product) => {
     // productsHTML += means productsHTML = productsHTML + 
     // productsHTML += it's an Accumulator Pattern
     // Pour les arrondis uitliser la methode toFixed()
+    // Delete all the HTML code (amazon.html line 55) for the products
     productsHTML += `
         <div class="product-container">
           <div class="product-image-container">
@@ -108,3 +117,7 @@ console.log(productsHTML);
 // '.' means look and take the element with the class of js-products-grid
 // '.innerHTML means change the HTML inside the element
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
+
+// Add the products with the JSON in data folder throw the products.js file
+// Step 5: Delete the Array of products line 8 or comment it.
+// Add <script src="data/products.js"></script> in the amazon.html file to loop and load the products.
