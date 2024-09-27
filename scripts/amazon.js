@@ -100,7 +100,8 @@ products.forEach((product) => {
             Added
           </div>
 
-          <button class="add-to-cart-button button-primary">
+          <button class="add-to-cart-button button-primary js-add-to-cart" 
+          data-product-id="${product.id}">
             Add to Cart
           </button>
         </div>
@@ -109,7 +110,7 @@ products.forEach((product) => {
 
 // Step 3: Combine this HTML together into
 // one string and put it on the web page
-console.log(productsHTML);
+
 
 // Step 4: Take the HTML 
 // And put it on the web page (using the DOM)
@@ -121,3 +122,38 @@ document.querySelector('.js-products-grid').innerHTML = productsHTML;
 // Add the products with the JSON in data folder throw the products.js file
 // Step 5: Delete the Array of products line 8 or comment it.
 // Add <script src="data/products.js"></script> in the amazon.html file to loop and load the products.
+
+// Step 6: Use and eventListener and Make the  Website interactive.
+// Create a cart.js file inside the data folder and link it in the amazon.html file
+// Add a data attribute in the button after the class to attach any information to an element.
+// Un data attribute s'écrit toujours avec "data-" au début et il faut séparer le nom avec "-" 
+document.querySelectorAll('.js-add-to-cart')
+    .forEach((button) => {
+        button.addEventListener('click', () => {
+            // console.log('Added product');
+            // 'dataset' récupère l'attribut HTML data attribute 'data-'
+            // console.log(button.dataset.productName);
+            // Always use the productId because two products with the same name can be saved to the cart. 
+            const productId = button.dataset.productId;
+            
+            let matchingItem;
+
+            cart.forEach((item) => {
+                if (productId === item.productId) {
+                    matchingItem = item;
+                }
+            });
+
+            if (matchingItem) {
+                matchingItem.quantity += 1;
+            } else {
+                cart.push({
+                    productId: productId,
+                    quantity: 1
+                });
+            }
+            
+            
+            console.log(cart)
+        });
+    })
