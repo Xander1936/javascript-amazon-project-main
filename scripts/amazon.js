@@ -152,8 +152,22 @@ document.querySelectorAll('.js-add-to-cart')
                     quantity: 1
                 });
             }
-            
-            
-            console.log(cart)
+            // Step 7:
+            // The cart is an array of objects
+            // So let's loop throw each object in the array
+            // Then calculate the quantity
+            let cartQuantity = 0;
+
+            cart.forEach((item) => {
+                cartQuantity += item.quantity;
+            });
+
+            // Step 8: Put the quantity on the page using the DOM
+            document.querySelector('.js-cart-quantity')
+                .innerHTML = cartQuantity
+
+
+            // console.log(cartQuantity);
+            // console.log(cart)
         });
     })
