@@ -4,9 +4,11 @@
 // 3. Make it interactive
 
 // Module cart: Avoid naming conflicts, is a better way to organize our code
-// With the modules the order the scripts files doesn't matter  
+// With the modules the order the scripts files doesn't matter   
 // Open the variable cart from cart.js
-import { cart } from '../data/cart.js'
+// Do this again with products.js file 
+import { cart } from '../data/cart.js';
+import { products } from '../data/products.js'; 
 
 
 // Step 1: Save the data
