@@ -7,7 +7,12 @@
 // With the modules the order the scripts files doesn't matter   
 // Open the variable cart from cart.js
 // Do this again with products.js file 
-import { cart } from '../data/cart.js';
+// You can write 
+/* import * as cartModule from '../data/cart.js;
+cartModule.cart
+cartModule.addToCart('id'); */ 
+import { cart, addToCart } from '../data/cart.js';
+
 import { products } from '../data/products.js'; 
 
 
@@ -135,6 +140,26 @@ document.querySelector('.js-products-grid').innerHTML = productsHTML;
 // Create a cart.js file inside the data folder and link it in the amazon.html file
 // Add a data attribute in the button after the class to attach any information to an element.
 // Un data attribute s'écrit toujours avec "data-" au début et il faut séparer le nom avec "-" 
+// Step 10: create the function to update the cart quantity
+function updateCartQuantity() {
+  // Step 7:
+  // The cart is an array of objects
+  // So let's loop throw each object in the array
+  // Then calculate the quantity
+  let cartQuantity = 0;
+  cart.forEach((cartItem) => {
+      // Accumulation pattern
+      cartQuantity += cartItem.quantity;
+  });
+
+  // Step 8: Put the quantity on the page using the DOM
+  document.querySelector('.js-cart-quantity')
+      .innerHTML = cartQuantity;
+
+  console.log(cartQuantity);
+  // console.log(cart)
+}
+
 document.querySelectorAll('.js-add-to-cart')
     .forEach((button) => {
         button.addEventListener('click', () => {
@@ -143,40 +168,7 @@ document.querySelectorAll('.js-add-to-cart')
             // console.log(button.dataset.productName);
             // Always use the productId because two products with the same name can be saved to the cart. 
             const productId = button.dataset.productId;
-            
-            let matchingItem;
-
-            // Loop throw the products and add them 
-            cart.forEach((item) => {
-                if (productId === item.productId) {
-                    matchingItem = item;
-                }
-            });
-
-            if (matchingItem) {
-                matchingItem.quantity += 1;
-            } else {
-                cart.push({
-                    productId: productId,
-                    quantity: 1
-                });
-            }
-            // Step 7:
-            // The cart is an array of objects
-            // So let's loop throw each object in the array
-            // Then calculate the quantity
-            let cartQuantity = 0;
-            cart.forEach((item) => {
-                // Accumulation pattern
-                cartQuantity += item.quantity;
-            });
-
-            // Step 8: Put the quantity on the page using the DOM
-            document.querySelector('.js-cart-quantity')
-                .innerHTML = cartQuantity
-
-
-            // console.log(cartQuantity);
-            // console.log(cart)
+            addToCart(productId);
+            updateCartQuantity();          
         });
     })
