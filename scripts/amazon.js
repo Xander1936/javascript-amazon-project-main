@@ -3,6 +3,12 @@
 // 2. Generate the HTML
 // 3. Make it interactive
 
+// Module cart: Avoid naming conflicts, is a better way to organize our code
+// With the modules the order the scripts files doesn't matter  
+// Open the variable cart from cart.js
+import { cart } from '../data/cart.js'
+
+
 // Step 1: Save the data
 // This is called a data structure.
 /* const products = [
@@ -52,7 +58,7 @@ let productsHTML = '';
 products.forEach((product) => {
     // Step 3: Second save the HTML into the variable productsHTML
     // productsHTML += means productsHTML = productsHTML + 
-    // productsHTML += it's an Accumulator Pattern
+    // productsHTML '+=' it's an Accumulation Pattern
     // Pour les arrondis uitliser la methode toFixed()
     // Delete all the HTML code (amazon.html line 55) for the products
     productsHTML += `
@@ -138,6 +144,7 @@ document.querySelectorAll('.js-add-to-cart')
             
             let matchingItem;
 
+            // Loop throw the products and add them 
             cart.forEach((item) => {
                 if (productId === item.productId) {
                     matchingItem = item;
@@ -157,8 +164,8 @@ document.querySelectorAll('.js-add-to-cart')
             // So let's loop throw each object in the array
             // Then calculate the quantity
             let cartQuantity = 0;
-
             cart.forEach((item) => {
+                // Accumulation pattern
                 cartQuantity += item.quantity;
             });
 
