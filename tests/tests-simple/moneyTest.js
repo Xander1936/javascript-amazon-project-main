@@ -1,4 +1,4 @@
-import { formatCurrency } from '../scripts/utils/money.js';
+import { formatCurrency } from '../../scripts/utils/money.js';
 
 // 1. Manual Tests -> By opening the Website in the Browser
 // 2. Automated Tests = using code to test code
@@ -30,7 +30,7 @@ if (formatCurrency(0) === '0.00') {
     console.log('failed');
 }
 // Up there we test 2 different situations = 2 different test cases
-console.log('Rounds up to the nearest cent');
+console.log('Rounds up to the nea rest cent');
 
 if (formatCurrency(2000.5) === '20.01') {
     console.log('passed');
