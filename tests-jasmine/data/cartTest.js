@@ -1,5 +1,7 @@
 import { addToCart, cart, loadFromStorage } from '../../data/cart.js';
 
+// Unit Tests = Testing 1 piece of the code. E.g. formatCurrency(), addToCart() etc ...
+
 describe('addToCart', () => {
 
   // Shared setup: fake the DOM quantity selector to always return "1"

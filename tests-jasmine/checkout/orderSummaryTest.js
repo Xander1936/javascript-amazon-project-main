@@ -1,6 +1,8 @@
 import { renderOrderSummary } from '../../scripts/checkout/orderSummary.js';
 import { loadFromStorage, cart } from "../../data/cart.js";
 
+
+// Integration Test = tests many units / pieces of code working together.
 // Integration test -> multiple unit tests: 2 things to test: 
 // 1. How the page looks
 // 2. How the page behaves
