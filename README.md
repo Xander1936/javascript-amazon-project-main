@@ -8,7 +8,7 @@ A feature-rich, full-stack-style **Amazon e-commerce clone** built entirely with
 
 ## 🚀 Live Demo
 
-> 🔗 **[View Live on GitHub Pages](https://xander1936.github.io/javascript-amazon-project-main/amazon.html)**  
+> 🔗 **[View Live on Vercel](https://javascript-amazon-project-main-blond.vercel.app/)**  
 > *(or open `amazon.html` locally — no build step required)*
 
 ---

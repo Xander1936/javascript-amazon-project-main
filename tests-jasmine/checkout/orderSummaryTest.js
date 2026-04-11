@@ -41,18 +41,18 @@ describe('test suite: renderOrderSummary', () => {
         
         renderOrderSummary();
     });
-    
+
     it('displays the cart', () => {
         expect(
             document.querySelectorAll('.js-cart-item-container').length
         ).toEqual(2);
-        // Add a new javascript class '.js-product-quantity' to the quantity 
-        // and finally test with innerText and .toContain('Expected text') methods.
+
         expect(
-            document.querySelector(`.js-product-quantity-${productId1}`).innerText
+            document.querySelector(`.js-product-quantity-${productId1}`).textContent  // ✅ not innerText
         ).toContain('Quantity: 1');
+
         expect(
-            document.querySelector(`.js-product-quantity-${productId2}`).innerText
+            document.querySelector(`.js-product-quantity-${productId2}`).textContent  // ✅ not innerText
         ).toContain('Quantity: 1');
 
         document.querySelector('.js-test-container').innerHTML = '';
