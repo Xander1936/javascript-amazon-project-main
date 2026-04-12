@@ -5,7 +5,7 @@ import { loadFromStorage, cart } from "../../data/cart.js";
 // Integration Test = tests many units / pieces of code working together.
 // Integration test -> multiple unit tests: 2 things to test: 
 // 1. How the page looks
-// 2. How the page behaves
+// 2. How the page behaves 
 describe('test suite: renderOrderSummary', () => {
     // Make this variables global
     const productId1 = 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6';
