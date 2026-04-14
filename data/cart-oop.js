@@ -1,122 +1,216 @@
-// Get a Variable out of a file with module
-// 1. Add type="module" attribute
-// 2. Export
-// 3. import
+// ============================================================
+// cart.js — Object-Oriented Cart using Factory Functions
+// ============================================================
+// How modules work:
+//  1. Add type="module" to your <script> tag in HTML
+//  2. Export what you want to share (export function / export let)
+//  3. Import it in other files (import { cart } from './cart.js')
+//
+// Object-Oriented Programming (OOP) tries to model the real world.
+// A "Cart" represents a shopping cart — it holds items and knows
+// how to manage itself (add, remove, save, load, etc.)
+//
+// A function defined inside an object is called a METHOD.
+// Shorthand: loadFromStorage() {}  ===  loadFromStorage: function() {}
+// ============================================================
 
-// Export the cart
-// To make the checkout page interactive
-// Checkout Page Step 1: Create inside the cart some default values
-
-// export let cart -> export let cart = undefined;
-// We create an object called cart = {} to convert cart.js into Oriented Object Programming 
-// Object-Oriented Programming = tries to represent the real world.
-// Cart -> means Cady in french.
+/**
+ * Factory Function: Cart(localStorageKey)
+ *
+ * Instead of using `class`, we use a plain factory function that
+ * builds and returns a cart object. Each call creates an independent
+ * cart stored under its own localStorage key.
+ *
+ * @param {string} localStorageKey - The key used to persist this cart
+ * @returns {object} A cart object with methods to manage cart items
+ */
 function Cart(localStorageKey) {
-    const cart = {
-        cartItems : undefined,
 
-        // loadFromStorage : function() -> loadFromStorage()
-        loadFromStorage() {
-            // Get the cart from the local Storage instead of using default values.
-            this.cartItems = JSON.parse(localStorage.getItem(localStorageKey));
+  // The internal cart object — all methods live here.
+  // We name it `cartObj` internally to avoid shadowing the outer scope.
+  const cartObj = {
+    cartItems: undefined,
 
-            if (!this.cartItems) {
-                // Use Default values for products in the cart array to avoid null : export let cart = [];
-                this.cartItems = [
-                    {
-                        productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
-                        quantity: 1,
-                        deliveryOptionId: '1'
-                    },
-                    {
-                        productId: '15b6fc6f-327a-4ec4-896f-486349e85a3d',
-                        quantity: 1,
-                        deliveryOptionId: '3'
-                    }
-                ];
-            }
-        },
+    // ----------------------------------------------------------
+    // loadFromStorage()
+    // Reads cart data from localStorage. If nothing is saved yet,
+    // it creates a default cart with two sample items and saves it.
+    // ----------------------------------------------------------
+    loadFromStorage() {
+      this.cartItems = JSON.parse(localStorage.getItem(localStorageKey));
 
-        // Save our cart to the local storage and don't need to reset or to refresh the page.
-        saveToStorage() {
-        // What we want to save = 'cart' and convert it into a string 
-        localStorage.setItem(localStorageKey, JSON.stringify(this.cartItems));
-        },
+      if (!this.cartItems) {
+        // No saved cart found — seed with default items
+        this.cartItems = [
+          {
+            productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+            quantity: 2,
+            deliveryOptionId: "1",
+          },
+          {
+            productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
+            quantity: 1,
+            deliveryOptionId: "2",
+          },
+        ];
+        // BUG FIX: was calling bare saveToStorage() (undefined).
+        // Must use this.saveToStorage() to call the method on this object.
+        this.saveToStorage();
+      }
+    },
 
-        // Step 9: Create a Function to add products in the cart
-        // Step 10: Put related code together 
-        addToCart(productId) {
-            // Create the variable to match the selected product with the productId 
-            let matchingItem; 
-            // Loop throw the products and add them 
-            this.cartItems.forEach((cartItem) => {
-                if (productId === cartItem.productId) {
-                    matchingItem = cartItem;
-                }
-            });
-            // console.log(matchingItem);
+    // ----------------------------------------------------------
+    // saveToStorage()
+    // Serializes cartItems to JSON and writes it to localStorage
+    // under the key provided when Cart() was created.
+    // ----------------------------------------------------------
+    saveToStorage() {
+      localStorage.setItem(localStorageKey, JSON.stringify(this.cartItems));
+    },
 
-            if (matchingItem) {
-                matchingItem.quantity += 1;
-            } else {
-                // console.log('Affiche something');
-                this.cartItems.push({
-                    productId: productId,
-                    quantity: 1,
-                    deliveryOptionsId: '1'
-                });
-                // console.log(cart.length);
-            }
-            // After adding products to the cart, save them to the local storage.
-            this.saveToStorage();
-        },
+    // ----------------------------------------------------------
+    // ----------------------------------------------------------
+    // addToCart(productId, quantity = 1)
+    // BUG FIX: The original code always tried to read the quantity
+    // from a DOM element (.js-quantity-selector-<id>).
+    // This crashes when addToCart() is called outside of a user
+    // interaction (e.g. on page load) because that DOM element
+    // doesn't exist in the current page / context.
+    //
+    // FIX: Accept quantity as a direct parameter with a default
+    // value of 1. The caller (e.g. a button click handler) is
+    // responsible for reading the DOM and passing the value in.
+    // This makes the method reusable and DOM-independent.
+    // ----------------------------------------------------------
+    addToCart(productId, quantity = 1) {
+      const matchingItem = this.cartItems.find(
+        (cartItem) => cartItem.productId === productId
+      );
 
-        removeFromCart(productId) {
-            const newCart = [];
+      if (matchingItem) {
+        // Product already in cart — increase by the given quantity
+        matchingItem.quantity += Number(quantity);
+      } else {
+        // New product — add it with the given quantity and default delivery
+        this.cartItems.push({
+          productId,
+          quantity: Number(quantity),
+          deliveryOptionId: "1",
+        });
+      }
 
-            this.cartItems.forEach((cartItem) => {
-                if(cartItem.productId !== productId) {
-                // Contains all the cartItem that doesn't match the selected productId
-                newCart.push(cartItem);    
-                }
-            });
+      this.saveToStorage();
+    },
+    // ----------------------------------------------------------
+    // ensureDeliveryOptionIds()
+    // Migration helper: older carts saved before deliveryOptionId
+    // was introduced won't have that field. This method patches
+    // any items missing it and re-saves if anything changed.
+    // ----------------------------------------------------------
+    ensureDeliveryOptionIds() {
+      const DEFAULT_DELIVERY_OPTION_ID = "1";
+      let didChange = false;
 
-            this.cartItems = newCart;
+      this.cartItems.forEach((cartItem) => {
+        if (!cartItem.deliveryOptionId) {
+          cartItem.deliveryOptionId = DEFAULT_DELIVERY_OPTION_ID;
+          didChange = true;
+        }
+      });
 
-            // Remove function finished and save to the local storage
-            this.saveToStorage();
-        },
+      if (didChange) this.saveToStorage();
+    },
 
-        updateDeliveryOption(productId, deliveryOptionId) {
-            let matchingItem;
+    // ----------------------------------------------------------
+    // removeFromCart(productId)
+    // Filters out the item with the matching productId and saves.
+    // ----------------------------------------------------------
+    removeFromCart(productId) {
+      this.cartItems = this.cartItems.filter(
+        (cartItem) => cartItem.productId !== productId
+      );
+      this.saveToStorage();
+    },
 
-            this.cartItems.forEach((cartItem) => {
-                if (productId === cartItem.productId) {
-                matchingItem = cartItem;
-                }
-            });
+    // ----------------------------------------------------------
+    // calculateCartQuantity()
+    // Sums all item quantities and updates the cart badge element
+    // in the DOM (if it exists on the current page).
+    // ----------------------------------------------------------
+    calculateCartQuantity() {
+      const cartQuantity = this.cartItems.reduce(
+        (accum, cartItem) => accum + cartItem.quantity,
+        0
+      );
 
-            matchingItem.deliveryOptionId = deliveryOptionId;
+      const el = document.querySelector(".js-cart-quantity");
+      if (el) el.innerHTML = cartQuantity;
+    },
 
-            this.saveToStorage();
-        },
+    // ----------------------------------------------------------
+    // updateQuantity(productId, newQuantity)
+    // Directly sets the quantity for a specific product.
+    // Does nothing if the product isn't in the cart.
+    // ----------------------------------------------------------
+    updateQuantity(productId, newQuantity) {
+      const matchingItem = this.cartItems.find(
+        (cartItem) => cartItem.productId === productId
+      );
 
-    };
-    // Return the Cart object so that we can use it outside the function.
-    return cart;
+      if (!matchingItem) return;
+
+      matchingItem.quantity = newQuantity;
+      this.saveToStorage();
+    },
+
+    // ----------------------------------------------------------
+    // updateDeliveryOption(productId, deliveryOptionId)
+    // Changes the selected delivery option for a product and
+    // immediately persists the change to localStorage.
+    // ----------------------------------------------------------
+    updateDeliveryOption(productId, deliveryOptionId) {
+      const matchingItem = this.cartItems.find(
+        (cartItem) => cartItem.productId === productId
+      );
+      if (!matchingItem) return;
+
+      matchingItem.deliveryOptionId = deliveryOptionId;
+      this.saveToStorage();
+    },
+  };
+
+  // BUG FIX: was `return Cart()` — a recursive call with no base case,
+  // causing infinite recursion and a stack overflow.
+  // The factory should return the object it just built, not call itself.
+  return cartObj;
 }
 
-const cart = Cart('cart-oop');
-const businessCart = Cart('cart-business');
+// ============================================================
+// Create independent cart instances, each with its own
+// localStorage key so they never overwrite each other.
+// ============================================================
+const cart = Cart("cart-oop");
+const businessCart = Cart("cart-business");
 
+// Load persisted data (or seed defaults) for both carts
 cart.loadFromStorage();
-
-
-
 businessCart.loadFromStorage();
+
+// Patch any legacy items that are missing deliveryOptionId
+cart.ensureDeliveryOptionIds();
+
+// Example: add a product to the main cart
+// (requires a .js-quantity-selector-<id> element in the DOM)
+cart.addToCart("83d4ca15-0f35-48f5-b7a3-1ea210004f2e");
 
 console.log(cart);
 console.log(businessCart);
 
-// cart.addToCart('83d4ca15-0f35-48f5-b7a3-1ea210004f2e');
- 
+// ============================================================
+// Update the cart quantity badge once the DOM is ready.
+// We call it on `cart` specifically — adjust if your page needs
+// a combined total across multiple cart objects.
+// ============================================================
+document.addEventListener("DOMContentLoaded", () => {
+  cart.calculateCartQuantity();
+});
