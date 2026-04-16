@@ -189,11 +189,14 @@ function Cart(localStorageKey) {
 // Create independent cart instances, each with its own
 // localStorage key so they never overwrite each other.
 // ============================================================
-const cart = Cart("cart-oop");
+ const cart = Cart("cart-oop");
 const businessCart = Cart("cart-business");
 
 // Load persisted data (or seed defaults) for both carts
 cart.loadFromStorage();
+
+cart.addToCart("83d4ca15-0f35-48f5-b7a3-1ea210004f2e");
+
 businessCart.loadFromStorage();
 
 // Patch any legacy items that are missing deliveryOptionId
@@ -201,7 +204,6 @@ cart.ensureDeliveryOptionIds();
 
 // Example: add a product to the main cart
 // (requires a .js-quantity-selector-<id> element in the DOM)
-cart.addToCart("83d4ca15-0f35-48f5-b7a3-1ea210004f2e");
 
 console.log(cart);
 console.log(businessCart);
