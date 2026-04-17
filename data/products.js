@@ -35,6 +35,28 @@ class Product {
   getPrice() {
     return `$${formatCurrency(this.priceCents)}`;
   }
+
+  extraInfoHTML() {
+    return "";
+  }
+}
+
+class Clothing extends Product  {
+  sizeChartLink; 
+
+  constructor(productDetails) {
+    super(productDetails); // super() call the constructor of the parent class with the products details = all properties and methods.
+    this.sizeChartLink = productDetails.sizeChartLink;
+  }
+
+  extraInfoHTML() {
+    // super.extraInfo.HTML(); Here call the extraInfoHTML() method from the parent class Product.
+    return `
+      <a href="${this.sizeChartLink}" target="_blank">
+        Size chart
+      </a>
+    `;
+  }
 }
 
 // Also export products.js as a module
@@ -82,7 +104,7 @@ export const products = [
       "apparel",
       "mens"
     ],
-    type: "clothing",
+    type: "clothing", // type is a Discriminator property
     sizeChartLink: "images/clothing-size-chart.png"
   },
   {
@@ -698,6 +720,9 @@ export const products = [
     ]
   }
 ].map((productDetails) => {
+  if(productDetails.type === "clothing") {
+    return new Clothing(productDetails);
+  }
   return new Product(productDetails);
 });
 
