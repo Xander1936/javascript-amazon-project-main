@@ -727,3 +727,52 @@ export const products = [
 });
 
 // console.log(products);
+
+/*
+const date = new Date();
+console.log(date);
+console.log(date.toLocaleDateString());
+*/
+
+/*
+console.log(this);
+
+const object2 = {
+  a: 2,
+  b: this.a
+}
+*/
+
+/*
+1. Inside a method, "this" points to the outer object
+const object3 = {
+  method: () => {
+    console.log(this);
+  }
+}
+object3.method();
+*/
+
+/*
+2. Inside a function, this = undefined but we can change it with .call() method.
+
+function logThis() {
+  console.log(this);
+}
+logThis(); 
+logThis.call("Hello");
+*/
+
+/* Arrows functions do not change the value of "this".
+const object3 = {
+  method: () => {
+    console.log(this);
+
+    [1, 2, 3].forEach(()  => {
+      console.log(this);
+    });
+    
+  }
+}
+object3.method(); 
+*/
