@@ -8,17 +8,22 @@
 // Status Code starts with 2 (200, 201, 204) = succeeded
 // List of all the backend which are supported is the backend API -> application programming interface. 
 // The backend can response with different types of data -> text, JSON, HTML, Images
-// JSON.parse() converts the JSON into JavaScript's objects.
+// JSON.parse() converts the JSON into JavaScript's objects- This allows us to send JavaScript objects across the internet, to the backend.
+
+
 
 const xhr = new XMLHttpRequest();
 
 // Parameter 'load' 
 xhr.addEventListener('load', () => {
-    console.log(xhr.response);
+    console.log(xhr.response); // The response is a string.
 });
 
-xhr.open('GET', 'https://supersimplebackend.dev/products/first');
+// Supported URL paths = Backend API - Application Programming Interface
+xhr.open('GET', 'https://supersimplebackend.dev/products/first'); // URL path - "/products/first"
 // xhr.send() -> asynchronous code
 xhr.send();
 
-// We can send other requests tto the backend using URL Paths
+// We can send other requests to the backend using URL Paths,
+// Line 20 the URL Path is "products/first". 
+
