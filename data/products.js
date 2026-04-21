@@ -40,7 +40,6 @@ class Product {
     return "";
   }
 }
-
 class Clothing extends Product  {
   sizeChartLink; 
 
@@ -59,6 +58,79 @@ class Clothing extends Product  {
   }
 }
 
+/*
+const date = new Date();
+console.log(date);
+console.log(date.toLocaleDateString());
+*/
+
+/*
+console.log(this);
+
+const object2 = {
+  a: 2,
+  b: this.a
+}
+*/
+
+/*
+1. Inside a method, "this" points to the outer object
+const object3 = {
+  method: () => {
+    console.log(this);
+  }
+}
+object3.method();
+*/
+
+/*
+2. Inside a function, this = undefined but we can change it with .call() method.
+
+function logThis() {
+  console.log(this);
+}
+logThis(); 
+logThis.call("Hello");
+*/
+
+/* Arrows functions do not change the value of "this".
+const object3 = {
+  method: () => {
+    console.log(this);
+
+    [1, 2, 3].forEach(()  => {
+      console.log(this);
+    });
+    
+  }
+}
+object3.method(); 
+*/
+
+// Commit message: Load products from the backend.
+export let products = [];
+
+export function loadProducts(fun) {
+  const xhr = new XMLHttpRequest();
+
+  xhr.addEventListener('load', () => {
+    products = JSON.parse(xhr.response).map((productDetails) => {
+      if(productDetails.type === "clothing") {
+        return new Clothing(productDetails);
+      }
+      return new Product(productDetails);
+    });
+    console.log('load products'); // console.log(products);
+    
+    fun();
+  });
+  
+  xhr.open('GET', 'https://supersimplebackend.dev/products');
+  xhr.send();
+}
+// loadProducts();
+
+/* 
 // Also export products.js as a module
 export const products = [
   {
@@ -725,54 +797,6 @@ export const products = [
   }
   return new Product(productDetails);
 });
+*/
 
 // console.log(products);
-
-/*
-const date = new Date();
-console.log(date);
-console.log(date.toLocaleDateString());
-*/
-
-/*
-console.log(this);
-
-const object2 = {
-  a: 2,
-  b: this.a
-}
-*/
-
-/*
-1. Inside a method, "this" points to the outer object
-const object3 = {
-  method: () => {
-    console.log(this);
-  }
-}
-object3.method();
-*/
-
-/*
-2. Inside a function, this = undefined but we can change it with .call() method.
-
-function logThis() {
-  console.log(this);
-}
-logThis(); 
-logThis.call("Hello");
-*/
-
-/* Arrows functions do not change the value of "this".
-const object3 = {
-  method: () => {
-    console.log(this);
-
-    [1, 2, 3].forEach(()  => {
-      console.log(this);
-    });
-    
-  }
-}
-object3.method(); 
-*/
