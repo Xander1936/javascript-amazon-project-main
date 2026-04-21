@@ -110,6 +110,33 @@ object3.method();
 // Commit message: Load products from the backend.
 export let products = [];
 
+// fetch() uses a promise to wait a response.
+export function loadProductsFetch() {
+  const promise = fetch('https://supersimplebackend.dev/products'
+  ).then((response) => {
+    //console.log(response);
+    return response.json(); // response.json() is asynchronous, it returns a promise.
+  }).then((productsData) => {
+    // console.log(productsData);
+    products = productsData.map((productDetails) => {
+      if(productDetails.type === "clothing") {
+        return new Clothing(productDetails);
+      }
+      return new Product(productDetails);
+    });
+    console.log('load products'); // console.log(products);
+    
+  });
+
+  return promise;
+}
+/*
+loadProductsFetch().then(() => {
+  console.log('next step');
+  
+});
+*/
+
 export function loadProducts(fun) {
   const xhr = new XMLHttpRequest();
 
