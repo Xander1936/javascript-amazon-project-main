@@ -1,5 +1,6 @@
 import { renderOrderSummary } from '../../scripts/checkout/orderSummary.js';
 import { loadFromStorage, cart } from "../../data/cart.js";
+import { loadProducts } from '../../data/products.js';
 
 
 // Integration Test = tests many units / pieces of code working together.
@@ -13,10 +14,18 @@ describe('test suite: renderOrderSummary', () => {
     
     // Jasmine Hook: that helps to share code between our tests 
     // e.g. 
-    // beforeEach() = runs code before each test, 
     // afterEach() = runs code after each test, 
-    // beforeAll() = runs code before all tests, 
     // afterAll()= runs code after all tests
+
+    // beforeAll() = runs code before all tests, 
+    beforeAll((done) => {
+        loadProducts(() => {
+            // done() let's us control when to go to the next step.
+            done();
+        });
+    });
+
+    // beforeEach() = runs code before each test, 
     beforeEach(() => {
         spyOn(localStorage, 'setItem');
         document.querySelector('.js-test-container').innerHTML = `
