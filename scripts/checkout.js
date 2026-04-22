@@ -5,11 +5,35 @@ import { loadCart } from "../data/cart.js";
 // import "../data/cart-class.js";
 // import "../data/backend-practice.js";
 
+
 // Promises allows JavaScript to run many codes at the same time. 
 // Promises help keep our code flat and avoid too much nesting. 
 // Use promises instead of callbacks.
 // resolve() is a function  - similar to done() function in jasmine - lets us control when to go to the next step.
 
+// async makes a function return a promise and lets us use await.
+// await = lets us write asynchronous code like normal code
+// The best practice is to use async / await over promises and callbacks. 
+async function loadPage() {
+    // console.log('load page');
+    
+    // await = we can only use it when we are inside an async function.
+    await loadProductsFetch();
+
+    const value = await new Promise((resolve) => {
+        loadCart(() => {
+            resolve('value3');
+        });
+    });
+
+    renderOrderSummary();
+    renderPaymentSummary();
+
+    // return 'value2';
+}
+loadPage();
+
+/*
 // Promise.all() lets us run multiple promises at the same time.
 Promise.all([
     // This Promise do the same thing as the previous loadProducts() callback function.
@@ -26,7 +50,7 @@ Promise.all([
     renderOrderSummary();
     renderPaymentSummary();
 });
-
+*/
 
 /*
 // This Promise do the same thing as the previous loadProducts() callback function.
