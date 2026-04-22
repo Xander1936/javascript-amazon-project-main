@@ -126,10 +126,15 @@ export function loadProductsFetch() {
     });
     console.log('load products'); // console.log(products);
     
+  }).catch((error) => {
+    // .catch(error) - to handle error in the promise.
+    console.log('Unexpected error. Please try again later.');  
   });
 
   return promise;
 }
+// loadProductsFetch();
+
 /*
 loadProductsFetch().then(() => {
   console.log('next step');
@@ -139,7 +144,7 @@ loadProductsFetch().then(() => {
 
 export function loadProducts(fun) {
   const xhr = new XMLHttpRequest();
-
+  // Use a callback to send a request and get a response.
   xhr.addEventListener('load', () => {
     products = JSON.parse(xhr.response).map((productDetails) => {
       if(productDetails.type === "clothing") {
@@ -150,6 +155,11 @@ export function loadProducts(fun) {
     console.log('load products'); // console.log(products);
     
     fun();
+  });
+
+  // Error handling in the callback.
+  xhr.addEventListener('error', (error) => {
+    console.log('Unexpected error. Please try again later.');  
   });
   
   xhr.open('GET', 'https://supersimplebackend.dev/products');

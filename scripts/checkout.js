@@ -15,16 +15,27 @@ import { loadCart } from "../data/cart.js";
 // await = lets us write asynchronous code like normal code
 // The best practice is to use async / await over promises and callbacks. 
 async function loadPage() {
-    // console.log('load page');
-    
-    // await = we can only use it when we are inside an async function.
-    await loadProductsFetch();
+    // Handle error in async / await using try {} catch (error) {}
+    // We can use try / catch to catch errors in normal code.
+    try {
+        // We can manually create errors with throw
+        // throw 'error1';
 
-    const value = await new Promise((resolve) => {
-        loadCart(() => {
-            resolve('value3');
+        // console.log('load page');
+    
+        // await = we can only use it when we are inside an async function.
+        await loadProductsFetch();
+
+        const value = await new Promise((resolve, reject) => {
+            // throw 'error2';
+            loadCart(() => {
+                // reject('error3');
+                resolve('value3');
+            });
         });
-    });
+    } catch (error) {
+        console.log('Unexpected error. Please try again later.');  
+    } 
 
     renderOrderSummary();
     renderPaymentSummary();
